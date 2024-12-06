@@ -127,10 +127,6 @@ func createUserDataDirs(info *snap.Info) error {
 		return fmt.Errorf("cannot get the current user: %s", err)
 	}
 
-	snapDir := filepath.Join(usr.HomeDir, dirs.UserHomeSnapDir)
-	if err := os.MkdirAll(snapDir, 0700); err != nil {
-		return fmt.Errorf(i18n.G("cannot create snap home dir: %w"), err)
-	}
 	// see snapenv.User
 	userData := info.UserDataDir(usr.HomeDir)
 	commonUserData := info.UserCommonDataDir(usr.HomeDir)
