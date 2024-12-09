@@ -78,6 +78,8 @@ static const char *sc_get_outer_core_mount_point()
 // TODO: fold this into bootstrap
 static void setup_private_mount(const char *security_tag)
 {
+	uid_t uid = getuid();
+	gid_t gid = getgid();
 	char tmpdir[MAX_BUF] = { 0 };
 
 	// Create a 0700 base directory, this is the base dir that is
@@ -120,7 +122,7 @@ static void setup_private_mount(const char *security_tag)
 		die("cannot change sharing on /tmp to make it private");
 	}
 	// do the chown after the bind mount to avoid potential shenanigans
-	if (chown("/tmp/", 0, 0) < 0) {
+	if (chown("/tmp/", uid, gid) < 0) {
 		die("cannot change ownership of /tmp");
 	}
 	// chdir to original directory
