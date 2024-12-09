@@ -1583,20 +1583,3 @@ func (s *RunSuite) TestRunGdbserverNoGdbserver(c *check.C) {
 	_, err := snaprun.Parser(snaprun.Client()).ParseArgs([]string{"run", "--gdbserver", "snapname.app"})
 	c.Assert(err, check.ErrorMatches, "please install gdbserver on your system")
 }
-
-func (s *RunSuite) TestCreateSnapDirPermissions(c *check.C) {
-	usr, err := user.Current()
-	c.Assert(err, check.IsNil)
-
-	usr.HomeDir = s.fakeHome
-	snaprun.MockUserCurrent(func() (*user.User, error) {
-		return usr, nil
-	})
-
-	info := &snap.Info{SuggestedName: "some-snap"}
-	c.Assert(snaprun.CreateUserDataDirs(info), check.IsNil)
-
-	fi, err := os.Stat(filepath.Join(s.fakeHome, dirs.UserHomeSnapDir))
-	c.Assert(err, check.IsNil)
-	c.Assert(fi.Mode()&os.ModePerm, check.Equals, os.FileMode(0700))
-}
